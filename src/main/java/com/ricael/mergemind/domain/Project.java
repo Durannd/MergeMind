@@ -2,11 +2,13 @@ package com.ricael.mergemind.domain;
 
 import com.ricael.mergemind.domain.enums.Status;
 import jakarta.persistence.*;
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "tb_project")
@@ -20,6 +22,7 @@ public class Project {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @NotBlank(message = "The title cannot be blank")
     private String title;
     private String description;
     private String banner_url;
@@ -28,12 +31,13 @@ public class Project {
     private Status status;
 
     @OneToMany(mappedBy = "project")
-    List<Role> role;
+    List<Role> role = new ArrayList<>();
 
+    @NotNull(message = "The project must have an owner")
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToMany(mappedBy = "projectsParticipated")
-    List<User> participants;
+    List<User> participants = new ArrayList<>();
 }

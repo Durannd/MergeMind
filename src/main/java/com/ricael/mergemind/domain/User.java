@@ -2,11 +2,14 @@ package com.ricael.mergemind.domain;
 
 import com.ricael.mergemind.domain.enums.Stacks;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.validation.constraints.Email;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "tb_user")
@@ -20,16 +23,21 @@ public class User {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @NotBlank(message = "The email cannot be blank")
     private String name;
 
+    @Email
+    @NotBlank(message = "The email cannot be blank")
     private String email;
+
+    @NotBlank(message = "The password cannot be blank")
     private String password;
     private String bio;
     private String github_url;
     private String photo_url;
 
     @OneToMany(mappedBy = "user")
-    List<Project> projectsOwned;
+    List<Project> projectsOwned = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
@@ -37,14 +45,14 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "project_id")
     )
-    List<Project> projectsParticipated;
+    List<Project> projectsParticipated = new ArrayList<>();
 
     @ElementCollection(targetClass = Stacks.class)
     @CollectionTable(name = "user_stack", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "stack")
     @Enumerated(EnumType.STRING)
-    private List<Stacks> stacks;
+    private List<Stacks> stacks = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    List<Application> applications;
+    List<Application> applications = new ArrayList<>();
 }

@@ -2,6 +2,7 @@ package com.ricael.mergemind.domain;
 
 import com.ricael.mergemind.domain.enums.Stacks;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,7 +21,11 @@ public class Role {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @NotBlank(message = "Role name is required")
     private String name;
+
+
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
