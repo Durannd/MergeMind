@@ -17,7 +17,7 @@ public final class ProjectMapper {
         project.setDescription(request.description());
         project.setBanner_url(request.banner_url());
         project.setStatus(request.status());
-        project.setUser(UserMapper.toEntity(request.user()));
+
         return project;
     }
 

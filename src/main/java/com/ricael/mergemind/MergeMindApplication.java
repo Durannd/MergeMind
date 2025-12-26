@@ -17,14 +17,4 @@ public class MergeMindApplication {
         SpringApplication.run(MergeMindApplication.class, args);
 
     }
-
-    @Bean
-    CommandLineRunner run(UserServices userServices) {
-        return args -> {
-
-            userServices.updateUser( 4L ,new UserRequest("Ricael", "menezes@gmail.com", "aaa", "Victor123", "USER", "ACTIVE"));
-
-            System.out.println("sucesso!");
-        };
-    }
 }
