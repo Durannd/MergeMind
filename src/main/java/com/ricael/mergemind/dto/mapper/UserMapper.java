@@ -15,6 +15,7 @@ public final class UserMapper {
         User user = new User();
         user.setName(request.name());
         user.setEmail(request.email());
+        user.setPassword(request.password());
         user.setBio(request.bio());
         user.setGithub_url(request.github_url());
         user.setPhoto_url(request.photo_url());

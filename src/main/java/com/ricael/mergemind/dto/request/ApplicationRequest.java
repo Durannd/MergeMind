@@ -4,7 +4,7 @@ import com.ricael.mergemind.domain.enums.Status;
 
 public record ApplicationRequest(Long id,
                                  Status status,
-                                 UserIdRequest user,
-                                 RoleIdRequest role
+                                 UserRefRequest user,
+                                 RoleRefRequest role
                                  ) {
 }
