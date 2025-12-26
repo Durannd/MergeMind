@@ -9,6 +9,6 @@ public record RoleResponse(
         Long id,
         String name,
         String description,
-        Project project,
+        String projectName,
         List<Stacks> stacks) {
 }

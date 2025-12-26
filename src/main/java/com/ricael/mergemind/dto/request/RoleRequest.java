@@ -9,6 +9,5 @@ import java.util.List;
 public record RoleRequest(
         String name,
         String description,
-        Project project,
         List<Stacks> stacks) {
 }
