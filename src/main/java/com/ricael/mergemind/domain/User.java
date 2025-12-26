@@ -36,6 +36,7 @@ public class User {
     private String github_url;
     private String photo_url;
 
+
     @OneToMany(mappedBy = "user")
     List<Project> projectsOwned = new ArrayList<>();
 

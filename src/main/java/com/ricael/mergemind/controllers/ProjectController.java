@@ -1,9 +1,11 @@
 package com.ricael.mergemind.controllers;
 
 import com.ricael.mergemind.domain.enums.Status;
+import com.ricael.mergemind.dto.RoleGetResponse;
 import com.ricael.mergemind.dto.request.ProjectRequest;
 import com.ricael.mergemind.dto.request.UserRefRequest;
 import com.ricael.mergemind.dto.response.ProjectResponse;
+import com.ricael.mergemind.dto.response.RoleResponse;
 import com.ricael.mergemind.services.ProjectServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -61,5 +63,14 @@ public class ProjectController {
         return ResponseEntity.ok(projectServices.findByParticipantsId(new UserRefRequest(userId)));
     }
 
+    @GetMapping("/{id}/roles")
+    public ResponseEntity<List<RoleGetResponse>> getRolesByProjectId(@PathVariable Long id) {
+        return ResponseEntity.ok(projectServices.findRolesByProjectId(id));
+    }
+
+    @PostMapping("{id}/roles")
+    public ResponseEntity<RoleGetResponse> addRoleToProject(@PathVariable Long id, @RequestBody RoleGetResponse roleResponse) {
+        return ResponseEntity.ok(projectServices.addRoleToProject(id, roleResponse));
+    }
 
 }
