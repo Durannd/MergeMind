@@ -31,7 +31,7 @@ public class Project {
     private Status status;
 
     @OneToMany(mappedBy = "project")
-    List<Role> role = new ArrayList<>();
+    private List<Role> role = new ArrayList<>();
 
     @NotNull(message = "The project must have an owner")
     @ManyToOne
@@ -39,5 +39,5 @@ public class Project {
     private User user;
 
     @ManyToMany(mappedBy = "projectsParticipated")
-    List<User> participants = new ArrayList<>();
+    private List<User> participants = new ArrayList<>();
 }
