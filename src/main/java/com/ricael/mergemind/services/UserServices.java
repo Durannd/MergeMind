@@ -48,6 +48,15 @@ public class UserServices {
         return UserMapper.toResponse(u);
     }
 
+    public User getUserEntityById(Long id) {
+        User u = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id)
+                );
+        return u;
+    }
+
+
+
     public UserResponse updateUser(Long id, UserUpdateRequest userRequest) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id)

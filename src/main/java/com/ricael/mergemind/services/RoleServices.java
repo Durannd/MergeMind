@@ -28,8 +28,11 @@ public class RoleServices {
     }
 
     public RoleResponse updateRole(RoleRequest roleRequest, Long roleId) {
-        Role r = RoleMapper.toEntity(roleRequest);
-        r.setId(roleId);
+        Role r = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Role not found with id: " + roleId));
+        r.setName(roleRequest.name());
+        r.setDescription(roleRequest.description());
+        r.setStacks(roleRequest.stacks());
         return RoleMapper.toResponse(roleRepository.save(r));
     }
 
@@ -41,6 +44,11 @@ public class RoleServices {
         }
     }
 
+    public Role getRoleById(Long roleId) {
+        Role r = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Role not found with id: " + roleId));
+        return r;
+    }
 
 
 }

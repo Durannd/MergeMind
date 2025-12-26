@@ -1,13 +1,18 @@
 package com.ricael.mergemind.services;
 
 import com.ricael.mergemind.domain.Project;
+import com.ricael.mergemind.domain.Role;
 import com.ricael.mergemind.domain.enums.Status;
+import com.ricael.mergemind.dto.RoleGetResponse;
 import com.ricael.mergemind.dto.mapper.ProjectMapper;
+import com.ricael.mergemind.dto.mapper.RoleMapper;
 import com.ricael.mergemind.dto.request.ProjectRequest;
 import com.ricael.mergemind.dto.request.UserRefRequest;
 import com.ricael.mergemind.dto.response.ProjectResponse;
+import com.ricael.mergemind.dto.response.RoleResponse;
 import com.ricael.mergemind.exceptions.TitleBlankOrNullException;
 import com.ricael.mergemind.repository.ProjectRepository;
+import com.ricael.mergemind.repository.RoleRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +25,10 @@ import java.util.List;
 public class ProjectServices {
 
     @Autowired
-    ProjectRepository projectRepository;
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     public ProjectResponse createProject(ProjectRequest projectRequest) {
 
@@ -61,7 +69,7 @@ public class ProjectServices {
         Project existingProject = projectRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Project not found"));
 
-        if(projectRequest.title().isBlank() || projectRequest.title() == null){
+        if (projectRequest.title().isBlank() || projectRequest.title() == null) {
             throw new TitleBlankOrNullException("Title cannot be blank");
         }
         existingProject.setTitle(projectRequest.title());
@@ -86,5 +94,24 @@ public class ProjectServices {
         projectRepository.deleteById(id);
     }
 
+    public List<RoleGetResponse> findRolesByProjectId(Long projectId) {
+        return roleRepository.findAllByProjectId(projectId)
+                .stream()
+                .map(RoleMapper::toGetResponse)
+                .toList();
+    }
+
+    public RoleGetResponse addRoleToProject(Long projectId, RoleGetResponse roleGetResponse) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new EntityNotFoundException("Project not found"));
+
+        Role r = new Role();
+        r.setName(roleGetResponse.name());
+        r.setDescription(roleGetResponse.description());
+        r.setStacks(roleGetResponse.stacks());
+        r.setProject(project);
+        Role savedRole = roleRepository.save(r);
+        return RoleMapper.toGetResponse(savedRole);
+    }
 
 }
