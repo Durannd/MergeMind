@@ -10,13 +10,17 @@ public final class ApplicationMapper {
     private ApplicationMapper() {
     }
 
-    public static Application toEntity(ApplicationRequest request, User user, Role role) {
+    public static Application toEntity(ApplicationRequest request) {
         if (request == null) {
             return null;
         }
         Application application = new Application();
         application.setStatus(request.status());
+        User user = new User();
+        user.setId(request.user().id());
         application.setUser(user);
+        Role role = new Role();
+        role.setId(request.role().id());
         application.setRole(role);
         return application;
     }
