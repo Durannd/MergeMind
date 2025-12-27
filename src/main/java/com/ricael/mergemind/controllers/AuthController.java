@@ -1,32 +1,34 @@
-package com.ricael.mergemind.controllers;
+package com.ricael. mergemind.controllers;
 
-import com.ricael.mergemind.dto.request.UserLoginRequest;
-import com.ricael.mergemind.dto.request.UserRequest;
-import com.ricael.mergemind.dto.response.UserResponse;
-import com.ricael.mergemind.services.UserServices;
+import com.ricael. mergemind.dto.request. UserLoginRequest;
+import com. ricael.mergemind.dto.request.UserRequest;
+import com.ricael.mergemind.dto.response.LoginResponse;
+import com.ricael. mergemind.dto.response. UserResponse;
+import com.ricael.mergemind.services.AuthService;
+import com.ricael.mergemind. services.UserServices;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired
+    private AuthService authService;
+
+    @Autowired
     private UserServices userServices;
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
-        return null;
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid UserLoginRequest request) {
+        LoginResponse response = authService.login(request);
+        return ResponseEntity. ok(response);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@Valid @RequestBody UserRequest userLoginRequest) {
-        return ResponseEntity.ok(userServices.createUser(userLoginRequest));
+    public ResponseEntity<UserResponse> register(@Valid @RequestBody UserRequest request) {
+        return ResponseEntity.ok(userServices.createUser(request));
     }
-
 }

@@ -13,26 +13,44 @@ import com.ricael.mergemind.exceptions.PasswordIncorrectException;
 import com.ricael.mergemind.exceptions.ResourceNotFoundException;
 import com.ricael.mergemind.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core. userdetails.UserDetailsService;
+import org.springframework. security.core.userdetails.UsernameNotFoundException;
 
 @Service
-public class UserServices {
+public class UserServices implements UserDetailsService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    // ✅ Método exigido pelo Spring Security
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
 
     public UserResponse createUser(UserRequest user) {
-        if (userRepository.existsByEmail(user.email())) {
+        if (userRepository.existsByEmail(user. email())) {
             throw new EmailInUseException("Email already in use");
-        } else if (user.password() == null || user.password().isEmpty()) {
-            throw new NullPasswordException("Password cannot be null or empty");
-        } else {
-            return UserMapper.toResponse(userRepository.save(UserMapper.toEntity(user)));
         }
+
+        User newUser = UserMapper.toEntity(user);
+
+
+        newUser.setPassword(passwordEncoder. encode(user.password()));
+
+        return UserMapper.toResponse(userRepository.save(newUser));
     }
 
 
-    //validate user to login after with jwt token
+
+
     public UserResponse validateUser(UserLoginRequest user) {
         User u = userRepository.findByEmailAndPassword(user.email(), user.password())
                 .orElseThrow(() -> new ResourceNotFoundException("Email or password incorrect")
