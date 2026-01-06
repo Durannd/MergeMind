@@ -50,7 +50,7 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    // faça uma config de cors para aceitar qualquer requisicao, depois irei arrumar
+
 
     @Bean
     public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
