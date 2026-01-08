@@ -48,6 +48,19 @@ public class UserServices implements UserDetailsService {
         return UserMapper.toResponse(userRepository.save(newUser));
     }
 
+    public User createUserEntity(UserRequest user) {
+        if (userRepository.existsByEmail(user. email())) {
+            throw new EmailInUseException("Email already in use");
+        }
+
+        User newUser = UserMapper.toEntity(user);
+
+
+        newUser.setPassword(passwordEncoder. encode(user.password()));
+
+        return userRepository.save(newUser);
+    }
+
 
 
 

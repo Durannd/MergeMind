@@ -3,6 +3,7 @@ package com.ricael.mergemind.services;
 import com.ricael.mergemind.domain.User;
 import com.ricael.mergemind.dto.mapper.UserMapper;
 import com.ricael.mergemind.dto.request.UserLoginRequest;
+import com.ricael.mergemind.dto.request.UserRequest;
 import com.ricael.mergemind.dto.response.LoginResponse;
 import com.ricael.mergemind.dto.response.UserResponse;
 import com.ricael.mergemind.repository.UserRepository;
@@ -28,6 +29,8 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserServices userServices;
 
     public LoginResponse login(UserLoginRequest request) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(
@@ -41,5 +44,19 @@ public class AuthService {
         UserResponse userResponse = UserMapper.toResponse(user);
 
         return new LoginResponse(token, userResponse);
+    }
+
+    // faca uma logica de register que tambem retorna o token por favor
+
+    public LoginResponse register(UserRequest request) {
+        UserRequest newUser = new UserRequest( request.name(), request.email(),
+                passwordEncoder.encode(request.password()),
+                null, null, null);
+
+        User userEntity = userServices.createUserEntity(newUser);
+
+        String token = tokenService.generateToken(userEntity);
+
+        return new LoginResponse(token, UserMapper.toResponse(userEntity) );
     }
 }
