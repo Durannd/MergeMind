@@ -83,8 +83,8 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}/roles")
-    public ResponseEntity<List<RoleGetResponse>> getRolesByProjectId(@PathVariable Long id) {
-        return ResponseEntity.ok(projectServices.findRolesByProjectId(id));
+    public ResponseEntity<Page<RoleGetResponse>> getRolesByProjectId(@PathVariable Long id, @PageableDefault(size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(projectServices.findRolesByProjectId(id, pageable));
     }
 
     @PostMapping("{id}/roles")

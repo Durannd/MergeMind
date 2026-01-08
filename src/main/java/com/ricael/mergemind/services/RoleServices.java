@@ -6,7 +6,10 @@ import com.ricael.mergemind.dto.request.RoleRequest;
 import com.ricael.mergemind.dto.response.RoleResponse;
 import com.ricael.mergemind.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,13 +23,12 @@ public class RoleServices {
         return RoleMapper.toResponse(roleRepository.save(RoleMapper.toEntity(roleRequest)));
     }
 
-    public List<RoleResponse> listAllByProjectId(Long projectId) {
-        return roleRepository.findAllByProjectId(projectId)
-                .stream()
-                .map(RoleMapper::toResponse)
-                .toList();
+    public Page<RoleResponse> listAllByProjectId(Long projectId, Pageable pageable) {
+        return roleRepository.findAllByProjectId(projectId, pageable)
+                .map(RoleMapper::toResponse);
     }
 
+    @Transactional
     public RoleResponse updateRole(RoleRequest roleRequest, Long roleId) {
         Role r = roleRepository.findById(roleId)
                 .orElseThrow(() -> new RuntimeException("Role not found with id: " + roleId));
@@ -36,6 +38,7 @@ public class RoleServices {
         return RoleMapper.toResponse(roleRepository.save(r));
     }
 
+    @Transactional
     public void deleteRole(Long roleId) {
         if(!roleRepository.existsById(roleId)) {
             throw new RuntimeException("Role not found with id: " + roleId);

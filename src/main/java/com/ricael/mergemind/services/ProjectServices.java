@@ -9,15 +9,13 @@ import com.ricael.mergemind.dto.mapper.RoleMapper;
 import com.ricael.mergemind.dto.request.ProjectRequest;
 import com.ricael.mergemind.dto.request.UserRefRequest;
 import com.ricael.mergemind.dto.response.ProjectResponse;
-import com.ricael.mergemind.dto.response.RoleResponse;
 import com.ricael.mergemind.exceptions.TitleBlankOrNullException;
 import com.ricael.mergemind.repository.ProjectRepository;
 import com.ricael.mergemind.repository.RoleRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -93,13 +91,12 @@ public class ProjectServices {
         projectRepository.deleteById(id);
     }
 
-    public List<RoleGetResponse> findRolesByProjectId(Long projectId) {
-        return roleRepository.findAllByProjectId(projectId)
-                .stream()
-                .map(RoleMapper::toGetResponse)
-                .toList();
+    public Page<RoleGetResponse> findRolesByProjectId(Long projectId, Pageable pageable) {
+        return roleRepository.findAllByProjectId(projectId, pageable)
+                .map(RoleMapper::toGetResponse);
     }
 
+    @Transactional
     public RoleGetResponse addRoleToProject(Long projectId, RoleGetResponse roleGetResponse) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new EntityNotFoundException("Project not found"));
