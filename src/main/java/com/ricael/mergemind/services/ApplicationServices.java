@@ -10,7 +10,11 @@ import com.ricael.mergemind.dto.request.ApplicationRequest;
 import com.ricael.mergemind.dto.response.ApplicationResponse;
 import com.ricael.mergemind.repository.ApplicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,6 +30,7 @@ public class ApplicationServices {
     @Autowired
     RoleServices roleServices;
 
+    @Transactional
     public ApplicationResponse create(ApplicationRequest applicationRequest) {
         Role r = roleServices.getRoleById(applicationRequest.role().id());
         User user = userServices.getUserEntityById(applicationRequest.user().id());
@@ -34,35 +39,32 @@ public class ApplicationServices {
         app.setStatus(applicationRequest.status());
         app.setRole(r);
         app.setUser(user);
-
         return ApplicationMapper.toResponse(applicationRepository.save(app));
     }
 
-    public List<ApplicationResponse> findByUserId(Long userId) {
-        return applicationRepository.findByUserId(userId)
-                .stream()
-                .map(ApplicationMapper::toResponse)
-                .toList();
+    public Page<ApplicationResponse> findByUserId(Long userId, Pageable pageable) {
+        return applicationRepository.findByUserId(userId, pageable)
+                .map(ApplicationMapper::toResponse);
     }
 
-    public List<ApplicationResponse> findByRoleProjectId(Long projectId) {
-        return applicationRepository.findByRoleProjectId(projectId)
-                .stream()
-                .map(ApplicationMapper::toResponse)
-                .toList();
+    public Page<ApplicationResponse> findByRoleProjectId(Long projectId, Pageable pageable) {
+        return applicationRepository.findByRoleProjectId(projectId, pageable)
+                .map(ApplicationMapper::toResponse);
     }
 
+    @Transactional
     public void updateApplicationStatus(Long id, String status) {
-
         try{
             Status statusEnum = Status.valueOf(status.toUpperCase());
             applicationRepository.updateApplicationStatus(id, statusEnum);
+
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid status value: " + status);
         }
 
     }
 
+    @Transactional
     public void deleteApplication(Long id) {
         if(!applicationRepository.existsById(id)) {
             throw new IllegalArgumentException("Application with id " + id + " does not exist.");

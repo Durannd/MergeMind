@@ -19,14 +19,11 @@ public class RoleServices {
     @Autowired
     RoleRepository roleRepository;
 
+    @Transactional
     public RoleResponse createRole(RoleRequest roleRequest) {
         return RoleMapper.toResponse(roleRepository.save(RoleMapper.toEntity(roleRequest)));
     }
 
-    public Page<RoleResponse> listAllByProjectId(Long projectId, Pageable pageable) {
-        return roleRepository.findAllByProjectId(projectId, pageable)
-                .map(RoleMapper::toResponse);
-    }
 
     @Transactional
     public RoleResponse updateRole(RoleRequest roleRequest, Long roleId) {

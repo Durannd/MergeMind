@@ -5,6 +5,10 @@ import com.ricael.mergemind.dto.request.StatusUpdateRequest;
 import com.ricael.mergemind.dto.response.ApplicationResponse;
 import com.ricael.mergemind.services.ApplicationServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,13 +27,15 @@ public class ApplicationController {
     }
 
     @GetMapping("user/{id}")
-    public ResponseEntity<List<ApplicationResponse>> getApplicationByUserId(@PathVariable Long id) {
-        return ResponseEntity.ok(applicationServices.findByUserId(id));
+    public ResponseEntity<Page<ApplicationResponse>> getApplicationByUserId(@PathVariable Long id,
+                                                                            @PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok(applicationServices.findByUserId(id, pageable));
     }
 
     @GetMapping("project/{id}")
-    public ResponseEntity<List<ApplicationResponse>> getApplicationByProjectId(@PathVariable Long id) {
-        return ResponseEntity.ok(applicationServices.findByRoleProjectId(id));
+    public ResponseEntity<Page<ApplicationResponse>> getApplicationByProjectId(@PathVariable Long id,
+                                                                               @PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok(applicationServices.findByRoleProjectId(id, pageable));
     }
 
     @PatchMapping("{id}")
