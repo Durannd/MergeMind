@@ -16,7 +16,9 @@ import com.ricael.mergemind.repository.RoleRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,32 +37,24 @@ public class ProjectServices {
         return ProjectMapper.toResponse(projectRepository.save(ProjectMapper.toEntity(projectRequest)));
     }
 
-    public List<ProjectResponse> findByStatus(Status status) {
-        return projectRepository.findByStatus(status)
-                .stream()
-                .map(ProjectMapper::toResponse)
-                .toList();
+    public Page<ProjectResponse> findByStatus(Status status, Pageable pageable) {
+        return projectRepository.findByStatus(status, pageable)
+                .map(ProjectMapper::toResponse);
     }
 
-    public List<ProjectResponse> findByParticipantsId(UserRefRequest userRefRequest) {
-        return projectRepository.findByParticipantsId(userRefRequest.id())
-                .stream()
-                .map(ProjectMapper::toResponse)
-                .toList();
+    public Page<ProjectResponse> findByParticipantsId(UserRefRequest userRefRequest, Pageable pageable) {
+        return projectRepository.findByParticipantsId(userRefRequest.id(), pageable)
+                .map(ProjectMapper::toResponse);
     }
 
-    public List<ProjectResponse> findByTitleContainingIgnoreCase(String title) {
-        return projectRepository.findByTitleContainingIgnoreCase(title)
-                .stream()
-                .map(ProjectMapper::toResponse)
-                .toList();
+    public Page<ProjectResponse> findByTitleContainingIgnoreCase(String title, Pageable pageable) {
+        return projectRepository.findByTitleContainingIgnoreCase(title, pageable)
+                .map(ProjectMapper::toResponse);
     }
 
-    public List<ProjectResponse> findByUserId(UserRefRequest userRefRequest) {
-        return projectRepository.findByUserId(userRefRequest.id())
-                .stream()
-                .map(ProjectMapper::toResponse)
-                .toList();
+    public Page<ProjectResponse> findByUserId(UserRefRequest userRefRequest, Pageable pageable) {
+        return projectRepository.findByUserId(userRefRequest.id(), pageable )
+                .map(ProjectMapper::toResponse);
     }
 
     @Transactional
@@ -83,11 +77,9 @@ public class ProjectServices {
         return ProjectMapper.toResponse(projectRepository.findById(id).orElseThrow());
     }
 
-    public List<ProjectResponse> findByDynamicFilters(String title, Status status) {
-        return projectRepository.findByDynamicFilters(title, status)
-                .stream()
-                .map(ProjectMapper::toResponse)
-                .toList();
+    public Page<ProjectResponse> findByDynamicFilters(String title, Status status, Pageable pageable) {
+        return projectRepository.findByDynamicFilters(title, status, pageable)
+                .map(ProjectMapper::toResponse);
     }
 
     public void deleteProject(Long id) {

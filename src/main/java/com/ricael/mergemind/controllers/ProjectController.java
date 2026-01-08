@@ -5,9 +5,12 @@ import com.ricael.mergemind.dto.RoleGetResponse;
 import com.ricael.mergemind.dto.request.ProjectRequest;
 import com.ricael.mergemind.dto.request.UserRefRequest;
 import com.ricael.mergemind.dto.response.ProjectResponse;
-import com.ricael.mergemind.dto.response.RoleResponse;
 import com.ricael.mergemind.services.ProjectServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +35,10 @@ public class ProjectController {
     }
 
     @GetMapping("/filters")
-    public ResponseEntity<List<ProjectResponse>> getByDynamicFilters(@RequestParam(required = false) String title, @RequestParam(required = false) Status status) {
-        return ResponseEntity.ok(projectServices.findByDynamicFilters(title, status));
+    public ResponseEntity<Page<ProjectResponse>> getByDynamicFilters(@RequestParam(required = false) String title,
+                                                                     @RequestParam(required = false) Status status,
+                                                                     @PageableDefault(size = 20, sort = "title", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(projectServices.findByDynamicFilters(title, status, pageable));
     }
 
     @PatchMapping("/{id}")
@@ -49,18 +54,21 @@ public class ProjectController {
     }
 
     @GetMapping("/by-title")
-    public ResponseEntity<List<ProjectResponse>> getProjectsByTitle(@RequestParam String title) {
-        return ResponseEntity.ok(projectServices.findByTitleContainingIgnoreCase(title));
+    public ResponseEntity<Page<ProjectResponse>> getProjectsByTitle(@RequestParam String title,
+                                                                    @PageableDefault(size = 20, sort = "title", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(projectServices.findByTitleContainingIgnoreCase(title, pageable));
     }
 
     @GetMapping("/by-status")
-    public ResponseEntity<List<ProjectResponse>> getProjectsByStatus(@RequestParam Status status) {
-        return ResponseEntity.ok(projectServices.findByStatus(status));
+    public ResponseEntity<Page<ProjectResponse>> getProjectsByStatus(@RequestParam Status status,
+                                                                     @PageableDefault(size = 20, sort = "title", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(projectServices.findByStatus(status, pageable));
     }
 
     @GetMapping("by-participants")
-    public ResponseEntity<List<ProjectResponse>> getProjectsByParticipantsId(@RequestParam Long userId) {
-        return ResponseEntity.ok(projectServices.findByParticipantsId(new UserRefRequest(userId)));
+    public ResponseEntity<Page<ProjectResponse>> getProjectsByParticipantsId(@RequestParam Long userId,
+                                                                             @PageableDefault(size = 20, sort = "title", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(projectServices.findByParticipantsId(new UserRefRequest(userId), pageable));
     }
 
     @GetMapping("/{id}/roles")
