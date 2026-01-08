@@ -29,6 +29,17 @@ public class ProjectController {
         return ResponseEntity.ok(projectServices.createProject(projectRequest));
     }
 
+    @GetMapping
+    public ResponseEntity<Page<ProjectResponse>> getAllProjects(@PageableDefault(size = 20, sort = "title", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(projectServices.findAll(pageable));
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<Page<ProjectResponse>> getProjectsByUserId(@RequestBody UserRefRequest userId,
+                                                                    @PageableDefault(size = 20, sort = "title", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(projectServices.findByUserId(userId, pageable));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProjectResponse> getProjectById(@PathVariable Long id) {
         return ResponseEntity.ok(projectServices.findById(id));

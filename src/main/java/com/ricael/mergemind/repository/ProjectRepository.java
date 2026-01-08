@@ -22,14 +22,19 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     Page<Project> findByStatus(Status status, Pageable pageable);
 
-
     Page<Project> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 
+    Page<Project> findAll(Pageable pageable);
 
-    @Query("""
-        SELECT p FROM tb_project p 
-        WHERE (:title IS NULL OR LOWER(p.title) LIKE LOWER(CONCAT('%', :title, '%'))) 
-          AND (:status IS NULL OR p.status = :status)
+    @Query(value = """
+    SELECT p FROM tb_project p
+    WHERE (CAST(:title AS string) IS NULL OR LOWER(p.title) LIKE LOWER(CONCAT('%', : title, '%')))
+    AND (:status IS NULL OR p.status = :status)
+    """,
+            countQuery = """
+    SELECT COUNT(p) FROM tb_project p
+    WHERE (CAST(:title AS string) IS NULL OR LOWER(p. title) LIKE LOWER(CONCAT('%', :title, '%')))
+    AND (:status IS NULL OR p. status = :status)
     """)
     Page<Project> findByDynamicFilters(
             @Param("title") String title,

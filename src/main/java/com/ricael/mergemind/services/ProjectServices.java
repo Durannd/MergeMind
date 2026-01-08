@@ -32,9 +32,15 @@ public class ProjectServices {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Transactional
     public ProjectResponse createProject(ProjectRequest projectRequest) {
 
         return ProjectMapper.toResponse(projectRepository.save(ProjectMapper.toEntity(projectRequest)));
+    }
+
+    public Page<ProjectResponse> findAll(Pageable pageable) {
+        return projectRepository.findAll(pageable)
+                .map(ProjectMapper::toResponse);
     }
 
     public Page<ProjectResponse> findByStatus(Status status, Pageable pageable) {
@@ -51,6 +57,7 @@ public class ProjectServices {
         return projectRepository.findByTitleContainingIgnoreCase(title, pageable)
                 .map(ProjectMapper::toResponse);
     }
+
 
     public Page<ProjectResponse> findByUserId(UserRefRequest userRefRequest, Pageable pageable) {
         return projectRepository.findByUserId(userRefRequest.id(), pageable )
