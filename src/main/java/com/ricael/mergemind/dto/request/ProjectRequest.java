@@ -7,5 +7,5 @@ public record ProjectRequest(String title,
                              String description,
                              @JsonProperty("banner_url") String banner_url,
                              Status status,
-                             UserRequest user) {
+                             UserRefRequest user) {
 }
