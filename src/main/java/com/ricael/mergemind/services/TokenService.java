@@ -31,7 +31,7 @@ public class TokenService {
                     . sign(algorithm);
 
         } catch (JWTCreationException exception) {
-            throw new RuntimeException("Erro ao gerar token JWT", exception);
+            throw new RuntimeException("Error on token generation", exception);
         }
     }
 
@@ -54,7 +54,7 @@ public class TokenService {
 
     private Instant generateExpirationDate() {
         return LocalDateTime.now()
-                .plusHours(2)
+                .plusDays(30)
                 .toInstant(ZoneOffset.of("-03:00"));
     }
 }

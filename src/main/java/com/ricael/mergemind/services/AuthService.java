@@ -46,7 +46,6 @@ public class AuthService {
         return new LoginResponse(token, userResponse);
     }
 
-    // faca uma logica de register que tambem retorna o token por favor
 
     public LoginResponse register(UserRequest request) {
         UserRequest newUser = new UserRequest( request.name(), request.email(),
