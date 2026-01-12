@@ -4,6 +4,7 @@ import com.ricael.mergemind.domain.Project;
 import com.ricael.mergemind.domain.User;
 import com.ricael.mergemind.dto.request.ProjectRequest;
 import com.ricael.mergemind.dto.response.ProjectResponse;
+import com.ricael.mergemind.dto.response.ProjectWithIdResponse;
 
 public final class ProjectMapper {
     private ProjectMapper() {
@@ -29,6 +30,20 @@ public final class ProjectMapper {
             return null;
         }
         return new ProjectResponse(
+                project.getTitle(),
+                project.getDescription(),
+                project.getBanner_url(),
+                project.getStatus(),
+                UserMapper.toResponse(project.getUser())
+        );
+    }
+
+    public static ProjectWithIdResponse toResponseWithId(Project project) {
+        if (project == null) {
+            return null;
+        }
+        return new ProjectWithIdResponse(
+                project.getId(),
                 project.getTitle(),
                 project.getDescription(),
                 project.getBanner_url(),

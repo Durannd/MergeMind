@@ -5,6 +5,7 @@ import com.ricael.mergemind.dto.RoleGetResponse;
 import com.ricael.mergemind.dto.request.ProjectRequest;
 import com.ricael.mergemind.dto.request.UserRefRequest;
 import com.ricael.mergemind.dto.response.ProjectResponse;
+import com.ricael.mergemind.dto.response.ProjectWithIdResponse;
 import com.ricael.mergemind.services.ProjectServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -48,6 +49,16 @@ public class ProjectController {
     })
     public ResponseEntity<Page<ProjectResponse>> getAllProjects(@PageableDefault(size = 20, sort = "title", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(projectServices.findAll(pageable));
+    }
+
+    @GetMapping("/id")
+    @Operation(summary = "List projects with id", description = "Returns a page of projects with sorting and pagination")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Projects page"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<Page<ProjectWithIdResponse>> getAllProjectsWithId(@PageableDefault(size = 20, sort = "title", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(projectServices.findAllWithId(pageable));
     }
 
     @GetMapping("/user")

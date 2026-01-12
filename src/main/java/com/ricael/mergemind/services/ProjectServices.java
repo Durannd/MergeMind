@@ -9,6 +9,7 @@ import com.ricael.mergemind.dto.mapper.RoleMapper;
 import com.ricael.mergemind.dto.request.ProjectRequest;
 import com.ricael.mergemind.dto.request.UserRefRequest;
 import com.ricael.mergemind.dto.response.ProjectResponse;
+import com.ricael.mergemind.dto.response.ProjectWithIdResponse;
 import com.ricael.mergemind.exceptions.TitleBlankOrNullException;
 import com.ricael.mergemind.repository.ProjectRepository;
 import com.ricael.mergemind.repository.RoleRepository;
@@ -39,6 +40,10 @@ public class ProjectServices {
     public Page<ProjectResponse> findAll(Pageable pageable) {
         return projectRepository.findAll(pageable)
                 .map(ProjectMapper::toResponse);
+    }
+    public Page<ProjectWithIdResponse> findAllWithId(Pageable pageable) {
+        return projectRepository.findAll(pageable)
+                .map(ProjectMapper::toResponseWithId);
     }
 
     public Page<ProjectResponse> findByStatus(Status status, Pageable pageable) {
