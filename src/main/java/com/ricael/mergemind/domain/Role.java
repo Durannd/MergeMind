@@ -32,8 +32,8 @@ public class Role {
     private Project project;
 
     @ElementCollection(targetClass = Stacks.class)
-    @CollectionTable(name = "role_stack", // Nome da tabela no diagrama
-            joinColumns = @JoinColumn(name = "id_role")) // FK que liga à Role)
+    @CollectionTable(name = "role_stack",
+            joinColumns = @JoinColumn(name = "id_role"))
     @Column(name = "stack")
     @Enumerated(EnumType.STRING)
     private List<Stacks> stacks;

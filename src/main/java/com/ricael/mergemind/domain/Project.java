@@ -1,5 +1,6 @@
 package com.ricael.mergemind.domain;
 
+import com.ricael.mergemind.domain.enums.Stacks;
 import com.ricael.mergemind.domain.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -30,7 +31,6 @@ public class Project {
     private String repository_url;
 
 
-
     @Enumerated(EnumType.STRING)
     private Status status;
 
@@ -44,4 +44,11 @@ public class Project {
 
     @ManyToMany(mappedBy = "projectsParticipated")
     private List<User> participants = new ArrayList<>();
+
+    @ElementCollection(targetClass = Stacks.class)
+    @CollectionTable(name = "project_stack",
+            joinColumns = @JoinColumn(name = "id_project"))
+    @Column(name = "stack")
+    @Enumerated(EnumType.STRING)
+    private List<Stacks> stacks;
 }
