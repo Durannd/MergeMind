@@ -26,6 +26,10 @@ public class Project {
     private String title;
     private String description;
     private String banner_url;
+    private String short_description;
+    private String repository_url;
+
+
 
     @Enumerated(EnumType.STRING)
     private Status status;
