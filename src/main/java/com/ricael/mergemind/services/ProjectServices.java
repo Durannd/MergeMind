@@ -10,9 +10,11 @@ import com.ricael.mergemind.dto.request.ProjectRequest;
 import com.ricael.mergemind.dto.request.UserRefRequest;
 import com.ricael.mergemind.dto.response.ProjectResponse;
 import com.ricael.mergemind.dto.response.ProjectWithIdResponse;
+import com.ricael.mergemind.dto.response.UserParticipantResponse;
 import com.ricael.mergemind.exceptions.TitleBlankOrNullException;
 import com.ricael.mergemind.repository.ProjectRepository;
 import com.ricael.mergemind.repository.RoleRepository;
+import com.ricael.mergemind.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ public class ProjectServices {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Transactional
     public ProjectResponse createProject(ProjectRequest projectRequest) {
@@ -115,4 +120,12 @@ public class ProjectServices {
         return RoleMapper.toGetResponse(savedRole);
     }
 
+    public Page<UserParticipantResponse> findParticipantsByProjectId(Long projectId, Pageable pageable) {
+        return userRepository.findParticipantsByProjectId(projectId, pageable)
+                .map(user -> new UserParticipantResponse(
+                        user.getId(),
+                        user.getName(),
+                        user.getBio()
+                ));
+    }
 }

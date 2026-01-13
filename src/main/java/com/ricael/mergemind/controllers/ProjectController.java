@@ -6,6 +6,7 @@ import com.ricael.mergemind.dto.request.ProjectRequest;
 import com.ricael.mergemind.dto.request.UserRefRequest;
 import com.ricael.mergemind.dto.response.ProjectResponse;
 import com.ricael.mergemind.dto.response.ProjectWithIdResponse;
+import com.ricael.mergemind.dto.response.UserParticipantResponse;
 import com.ricael.mergemind.services.ProjectServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -164,6 +165,15 @@ public class ProjectController {
     })
     public ResponseEntity<RoleGetResponse> addRoleToProject(@PathVariable Long id, @RequestBody RoleGetResponse roleResponse) {
         return ResponseEntity.ok(projectServices.addRoleToProject(id, roleResponse));
+    }
+
+    @GetMapping("participants/{projectId}")
+    @Operation(summary = "List project participants", description = "Returns participants associated with a project")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Participants page")
+    })
+    public ResponseEntity<Page<UserParticipantResponse>> getParticipantsByProjectId(@PathVariable Long projectId, @PageableDefault(size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(projectServices.findParticipantsByProjectId(projectId, pageable));
     }
 
 }
