@@ -34,6 +34,9 @@ public final class ProjectMapper {
                 project.getDescription(),
                 project.getBanner_url(),
                 project.getStatus(),
+                project.getShort_description(),
+                project.getRepository_url(),
+                project.getStacks(),
                 UserMapper.toResponse(project.getUser())
         );
     }
@@ -48,6 +51,9 @@ public final class ProjectMapper {
                 project.getDescription(),
                 project.getBanner_url(),
                 project.getStatus(),
+                project.getShort_description(),
+                project.getRepository_url(),
+                project.getStacks(),
                 UserMapper.toResponse(project.getUser())
         );
     }
