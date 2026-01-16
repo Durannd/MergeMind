@@ -125,7 +125,8 @@ public class ProjectServices {
                 .map(user -> new UserParticipantResponse(
                         user.getId(),
                         user.getName(),
-                        user.getBio()
+                        user.getBio(),
+                        user.getPhoto_url()
                 ));
     }
 }
